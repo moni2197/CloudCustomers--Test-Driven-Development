@@ -7,8 +7,22 @@ public interface IUsersService
 }
 public class UsersService: IUsersService
 {
-	public Task <List<User>> GetAllUsers()
+	private readonly HttpClient _httpClient;
+
+	public UsersService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public async Task <List<User>> GetAllUsers()
 	{
-		throw new NotImplementedException();
+		var usersResponse = await _httpClient.GetAsync("https://www.example.com");
+		if (usersResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+			return new List<User> { };
+		}
+		var responseContent = usersResponse.Content;
+		var allUsers = await responseContent.ReadFromJsonAsync<List<User>>();
+		return allUsers.ToList();
 	}
 }
