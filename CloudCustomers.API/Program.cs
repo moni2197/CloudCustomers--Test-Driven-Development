@@ -1,3 +1,5 @@
+using CloudCustomers.API.Config;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigureServices(builder.Services);
@@ -27,6 +29,8 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services)
 {
+    services.Configure<UsersApiOptions>(builder.Configuration.GetSection("UsersApiOptions"));
     services.AddTransient<IUsersService, UsersService>();
     services.AddHttpClient<IUsersService, UsersService>();
+    
 }
